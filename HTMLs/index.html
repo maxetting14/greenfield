@@ -1193,9 +1193,7 @@
     }
     tryLoad();
 
-    // Suppress card's own overflow so wheel outside PDF bubbles to window flipCard handler
     const card = container.closest('.rolo-card');
-    if (card) card.style.overflowY = 'hidden';
 
     // Wheel inside PDF canvas → navigate pages; stop propagation so window doesn't also flipCard
     container.querySelector('.pdf-canvas-wrap').addEventListener('wheel', (e) => {
@@ -1344,12 +1342,23 @@
     if (coverVisible) return;
     if (defVisible) return;
     if (scrollLocked) return;
-    e.preventDefault();
 
     if (panelOpen) {
+      const card = document.querySelector('.rolo-card');
+      if (card) {
+        const scrollingDown = e.deltaY > 0;
+        const atBottom = card.scrollTop + card.clientHeight >= card.scrollHeight - 2;
+        const atTop    = card.scrollTop <= 0;
+        if ((scrollingDown && !atBottom) || (!scrollingDown && !atTop)) {
+          return; // let the card scroll naturally
+        }
+      }
+      e.preventDefault();
       flipCard(e.deltaY < 0 ? -1 : 1);
       return;
     }
+
+    e.preventDefault();
 
     scrollLocked = true;
     setTimeout(() => { scrollLocked = false; }, 180);
