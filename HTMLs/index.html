@@ -58,6 +58,14 @@
   .zn-item {
     display: flex; align-items: center; gap: 16px;
     justify-content: flex-end;
+    cursor: pointer;
+  }
+  .zn-item:not(.active):hover .zn-label {
+    color: rgba(70,200,120,0.75);
+    text-shadow: 0 0 8px rgba(24,179,94,0.5);
+  }
+  .zn-item:not(.active):hover .zn-icon {
+    color: rgba(70,200,120,0.75);
   }
 
   .zn-dot {
@@ -207,7 +215,8 @@
     background: radial-gradient(circle at 35% 30%, #b8ffd8 0%, #18b35e 45%, #0c6e38 75%);
     border: 2px solid rgba(4,10,7,0.85);
     transform: translate(-50%, -50%);
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
     z-index: 20;
     opacity: 0;
     transition: opacity 0.4s ease;
@@ -253,11 +262,19 @@
     text-transform: uppercase;
     font-weight: normal;
     opacity: 0;
+    cursor: pointer;
     animation: coverFadeIn 1.8s ease forwards 0.4s, coverFloat 7s ease-in-out infinite 0.4s;
     transition: text-shadow 0.4s ease;
     text-shadow:
       0 0 10px rgba(24,179,94,0.5),
       0 0 24px rgba(24,179,94,0.2);
+  }
+  #cover-title:hover {
+    text-shadow:
+      0 0 8px #c8dff5,
+      0 0 16px rgba(24,179,94,0.9),
+      0 0 40px rgba(24,179,94,0.7),
+      0 0 70px rgba(24,179,94,0.4);
   }
 
   #cover-divider {
@@ -346,7 +363,7 @@
     position: fixed; inset: 0; z-index: 310;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    background: rgba(4, 7, 14, 0.97);
+    background: #04070e;
     transform: translateX(100%);
     transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
     pointer-events: none;
@@ -374,7 +391,7 @@
   }
   #zone-def-text {
     font-family: 'Courier New', monospace;
-    font-size: 22px; line-height: 1.7;
+    font-size: 16px; line-height: 1.85;
     color: rgba(232,244,255,0.82);
     letter-spacing: 0.01em;
   }
@@ -382,18 +399,27 @@
     margin-top: 72px;
     font-family: 'Courier New', monospace;
     font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
-    color: rgba(37,217,110,0.35);
+    color: #25d96e;
+    cursor: pointer;
     animation: def-hint-pulse 2.4s ease-in-out infinite;
   }
   @keyframes def-hint-pulse {
-    0%, 100% { opacity: 0.35; transform: translateY(0); }
-    50%       { opacity: 0.7;  transform: translateY(4px); }
+    0%, 100% {
+      opacity: 0.7;
+      transform: translateY(0);
+      text-shadow: 0 0 8px #c8dff5, 0 0 16px rgba(24,179,94,0.9), 0 0 40px rgba(24,179,94,0.7), 0 0 70px rgba(24,179,94,0.4);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(4px);
+      text-shadow: 0 0 12px #c8dff5, 0 0 24px rgba(24,179,94,1), 0 0 60px rgba(24,179,94,0.9), 0 0 100px rgba(24,179,94,0.5);
+    }
   }
 
   #content-panel {
     position: fixed;
     inset: 0;
-    background: rgba(4, 7, 14, 0.98);
+    background: #04070e;
     z-index: 300;
     display: flex; flex-direction: column;
     transform: translateY(100%);
@@ -647,10 +673,10 @@
   #linkedin-link svg { width: 16px; height: 16px; fill: #fff; }
   body.panel-open #corner-links { display: none; }
 
-  /* About panel — mirrors content-panel */
+  /* About panel */
   #about-panel {
-    position: fixed; inset: 0; background: rgba(4,7,14,0.98);
-    z-index: 400; display: flex; flex-direction: column;
+    position: fixed; inset: 0; background: #04070e;
+    z-index: 620; display: flex; flex-direction: column;
     transform: translateY(100%);
     transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
     pointer-events: none;
@@ -660,6 +686,7 @@
     padding: 36px 56px 28px;
     border-bottom: 1px solid rgba(24,179,94,0.15);
     display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
   }
   #about-title {
     font-size: 16px; letter-spacing: 0.4em;
@@ -674,17 +701,48 @@
   #about-close:hover { color: #25d96e; text-shadow: 0 0 10px rgba(24,179,94,0.8); }
   #about-body {
     flex: 1; display: flex; align-items: center; justify-content: center;
-    color: rgba(200,223,245,0.35); font-family: 'Courier New', monospace;
-    font-size: 13px; letter-spacing: 0.1em;
+    padding: 48px 56px;
+    overflow-y: auto;
   }
+  #about-inner {
+    max-width: 680px; width: 100%;
+  }
+  #about-inner p {
+    font-family: 'Courier New', monospace;
+    font-size: 16px; line-height: 1.85;
+    color: rgba(232,244,255,0.82);
+    letter-spacing: 0.01em;
+    margin-bottom: 32px;
+  }
+  #about-inner p:last-child {
+    margin-bottom: 0;
+    font-size: 13px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: #25d96e;
+    text-shadow: 0 0 10px rgba(24,179,94,0.6), 0 0 28px rgba(24,179,94,0.3);
+    margin-top: 48px;
+  }
+  #about-linkedin {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 32px;
+    font-family: 'Courier New', monospace; font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(37,217,110,0.5);
+    text-decoration: none;
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+  #about-linkedin:hover {
+    color: #25d96e;
+    text-shadow: 0 0 10px rgba(24,179,94,0.7);
+  }
+  #about-linkedin svg { width: 14px; height: 14px; fill: currentColor; }
 </style>
 </head>
 <body class="zone-brain">
 
 <div id="cover">
-  <div id="cover-title">Brain &nbsp;|&nbsp; Heart &nbsp;|&nbsp; Spirit</div>
+  <div id="cover-title">greenfield repository</div>
   <div id="cover-divider"></div>
-  <div id="cover-sub">A digital repository for the content that has touched each</div>
+  <div id="cover-sub">a digital repository for the content that has touched brain, heart, and spirit</div>
   <div id="cover-name">Max Ettinghausen</div>
 </div>
 
@@ -791,6 +849,7 @@
   <div class="chakra-dot" id="dot-heart"
        style="left: 50%; top: 32%;"></div>
 
+
 </div>
 
 <div id="img-lightbox"><img id="lightbox-img" src="" alt=""></div>
@@ -810,7 +869,14 @@
     <span id="about-title">ABOUT</span>
     <span id="about-close">&#x2715;</span>
   </div>
-  <div id="about-body">— coming soon —</div>
+  <div id="about-body">
+    <div id="about-inner">
+      <p>My name is Max Ettinghausen and I am a 23-year-old trying to navigate life, relationships, career, and the endless pursuit of improvement. In the chaos of it all, which I thoroughly enjoy, I wanted to create something tangible that I could showcase.</p>
+      <p>I got to a point where consuming content wasn't enough — I wanted to create something tangible with the knowledge, ideas, and skills I have accumulated along the way. This digital repository is my attempt at creating in a world that pushes consumption over everything.</p>
+      <p>Being able to simultaneously let my creative spirit run free while learning how to leverage and use such a powerful tool like Claude Code has been extremely rewarding. I look forward to improving and adding to this living repository as time goes on.</p>
+<p>SOMETHING TO FALL BACK ON.</p>
+    </div>
+  </div>
 </div>
 
 <div id="zone-def-panel">
@@ -873,8 +939,8 @@
   const ZONES = ['spirit', 'heart', 'brain'];
   let zoneIndex = 2; // start on 'brain'
 
-  const dotBrain = document.getElementById('dot-brain');
-  const dotHeart = document.getElementById('dot-heart');
+  const dotBrain   = document.getElementById('dot-brain');
+  const dotHeart   = document.getElementById('dot-heart');
   const navItems = {
     brain:  document.getElementById('zn-brain'),
     heart:  document.getElementById('zn-heart'),
@@ -918,16 +984,22 @@
     document.getElementById('cover-sub'),
     document.getElementById('cover-name'),
   ];
-  const GLOW_ON  = '0 0 16px rgba(24,179,94,1), 0 0 40px rgba(24,179,94,0.8), 0 0 80px rgba(24,179,94,0.4)';
-  const GLOW_OFF = '0 0 8px rgba(24,179,94,0.5), 0 0 20px rgba(24,179,94,0.2)';
+  const GLOW_ON       = '0 0 16px rgba(24,179,94,1), 0 0 40px rgba(24,179,94,0.8), 0 0 80px rgba(24,179,94,0.4)';
+  const GLOW_OFF      = '0 0 8px rgba(24,179,94,0.5), 0 0 20px rgba(24,179,94,0.2)';
+  const GLOW_TITLE_ON = '0 0 8px #c8dff5, 0 0 16px rgba(24,179,94,1), 0 0 40px rgba(24,179,94,0.8), 0 0 80px rgba(24,179,94,0.5), 0 0 120px rgba(24,179,94,0.3)';
 
   cover.addEventListener('mousemove', (e) => {
     glowEls.forEach(el => {
       const r = el.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-      el.style.textShadow = dist < 180 ? GLOW_ON : GLOW_OFF;
+      if (el.id === 'cover-title') {
+        const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+        el.style.textShadow = over ? GLOW_TITLE_ON : GLOW_OFF;
+      } else {
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+        el.style.textShadow = dist < 180 ? GLOW_ON : GLOW_OFF;
+      }
     });
   });
   cover.addEventListener('mouseleave', () => {
@@ -1121,6 +1193,19 @@
     }
     tryLoad();
 
+    // Suppress card's own overflow so wheel outside PDF bubbles to window flipCard handler
+    const card = container.closest('.rolo-card');
+    if (card) card.style.overflowY = 'hidden';
+
+    // Wheel inside PDF canvas → navigate pages; stop propagation so window doesn't also flipCard
+    container.querySelector('.pdf-canvas-wrap').addEventListener('wheel', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!pdfDoc) return;
+      if (e.deltaY > 0 && pageNum < pdfDoc.numPages) { pageNum++; renderPage(pageNum); }
+      else if (e.deltaY < 0 && pageNum > 1)           { pageNum--; renderPage(pageNum); }
+    }, { passive: false });
+
     container.querySelectorAll('.pdf-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
@@ -1228,7 +1313,9 @@
     if (!defVisible) return;
     defPanel.classList.remove('open');
     defVisible = false;
-    openPanel(pendingZone);
+    const zone = pendingZone;
+    pendingZone = null;
+    setTimeout(() => openPanel(zone), 480);
   });
 
   panelClose.addEventListener('click', closePanel);
@@ -1239,15 +1326,33 @@
   document.getElementById('organ-heart').addEventListener('click', () => openDefPanel('heart'));
   document.getElementById('organ-meditation').addEventListener('click', () => openDefPanel('spirit'));
 
+  function switchToZone(zone) {
+    if (coverVisible) return;
+    zoneIndex = ZONES.indexOf(zone);
+    setZone(zone);
+  }
+  dotBrain.addEventListener('click', () => switchToZone('brain'));
+  dotHeart.addEventListener('click', () => switchToZone('heart'));
+
+  // zn-items (BRAIN / HEART / SPIRIT labels on right) are also clickable zone switchers
+  Object.entries(navItems).forEach(([zone, el]) => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => switchToZone(zone));
+  });
+
   window.addEventListener('wheel', (e) => {
     if (coverVisible) return;
-    if (panel.classList.contains('open')) return;
     if (defVisible) return;
     if (scrollLocked) return;
     e.preventDefault();
+
+    if (panelOpen) {
+      flipCard(e.deltaY < 0 ? -1 : 1);
+      return;
+    }
+
     scrollLocked = true;
     setTimeout(() => { scrollLocked = false; }, 180);
-
     if (e.deltaY < 0) {
       zoneIndex = (zoneIndex - 1 + ZONES.length) % ZONES.length;
     } else {
