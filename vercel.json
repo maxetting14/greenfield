@@ -1,3 +1,5 @@
 {
-  "outputDirectory": "HTMLs"
+  "rewrites": [
+    { "source": "/", "destination": "/HTMLs/index.html" }
+  ]
 }
