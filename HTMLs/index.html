@@ -575,6 +575,10 @@
     display: flex; justify-content: center; padding: 20px;
   }
   .pdf-canvas { display: block; box-shadow: 0 4px 24px rgba(0,0,0,0.6); }
+  @media (max-width: 680px) {
+    .rolo-card-pdf-viewer { display: none; }
+    .pdf-mobile-open { display: block !important; }
+  }
 
 
 
@@ -1002,6 +1006,9 @@
           </div>
         </div>
         <div class="pdf-canvas-wrap"><canvas class="pdf-canvas"></canvas></div>
+      </div>
+      <div class="pdf-mobile-open" style="display:none;margin:12px 0 4px;text-align:center;">
+        <button onclick="(function(){const b=atob('${item.pdf}'.split(',')[1]);const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);const url=URL.createObjectURL(new Blob([a],{type:'application/pdf'}));window.open(url,'_blank');})()" style="background:rgba(24,179,94,0.12);border:1px solid rgba(24,179,94,0.4);color:#25d96e;font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;padding:10px 20px;border-radius:4px;cursor:pointer;">Open PDF ↗</button>
       </div>`;
     }
 
@@ -1249,17 +1256,7 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     document.getElementById('cover-enter').click();
   }, { passive: false });
 
-  // Rolodex swipe
-  let swipeStartX = null;
-  viewport.addEventListener('touchstart', (e) => {
-    swipeStartX = e.touches[0].clientX;
-  }, { passive: true });
-  viewport.addEventListener('touchend', (e) => {
-    if (swipeStartX === null) return;
-    const dx = e.changedTouches[0].clientX - swipeStartX;
-    if (Math.abs(dx) > 40) flipCard(dx < 0 ? 1 : -1);
-    swipeStartX = null;
-  }, { passive: true });
+
 
 </script>
 
