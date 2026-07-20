@@ -806,6 +806,11 @@
   }
 
   /* Back button */
+  #panel-header-right {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
   #panel-back {
     display: none;
     font-size: 28px;
@@ -943,9 +948,11 @@
 
 <div id="content-panel">
   <div id="panel-header">
-    <span id="panel-back">&#8592;</span>
     <span id="panel-zone-name">BRAIN</span>
-    <span id="panel-close">&#x2715;</span>
+    <div id="panel-header-right">
+      <span id="panel-back">&#8592; Back</span>
+      <span id="panel-close">&#x2715;</span>
+    </div>
   </div>
   <div id="card-grid"></div>
   <div id="rolodex-viewport"></div>
