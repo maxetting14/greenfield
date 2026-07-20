@@ -996,7 +996,7 @@
         type: 'Book',
         title: '<em>Demon Copperhead</em> — Barbara Kingsolver',
         date: 'July 15, 2026',
-        img: '../Content/demon_copperhead.jpg',
+        thumb: '../Content/demon_copperhead.jpg',
         note: `<img src="../Content/demon_copperhead.jpg" style="float:right;width:120px;margin:0 0 10px 14px;border-radius:3px;opacity:0.9;">I've never finished a book quicker than <em>Demon Copperhead</em> by Barbara Kingsolver. Thanks to my mom for recommending this amazing read.<br><br>A modernized reimagining of Charles Dickens's classic 1850 novel <em>David Copperfield</em>, <em>Demon Copperhead</em> takes place in Appalachia around the 1990s and 2000s, following a boy named Damon growing up in rural, poverty-stricken Appalachia. Damon is forced to navigate the foster care system, the modern opioid epidemic, and constant exploitation by the very people and institutions meant to protect him.<br><br>What struck me most about this story is how effectively Barbara Kingsolver captures Damon's voice in her writing. It was so precise and genuine that I felt like I was inside his head, experiencing every emotion he felt, and not just observing them on paper.<br><br>When a writer is able to do that, you relate to a character on such a deeper level. I felt every ounce of pain, rage, confusion, happiness, and joy he was feeling. I couldn't put it down, even in the darkest and most upsetting parts of the story.<br><br>Just like <em>Bagels on Sunday</em>, this piece tugged at my heartstrings — I'll never forget how this read moved me.`,
       },
       {
@@ -1317,8 +1317,10 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     let thumbInner = '';
     if (item.youtube) {
       thumbInner = `<img src="https://img.youtube.com/vi/${item.youtube}/hqdefault.jpg" alt="">`;
+    } else if (item.thumb) {
+      thumbInner = `<img src="${item.thumb}" alt="" style="object-fit:contain;background:#060c14;">`;
     } else if (item.img) {
-      thumbInner = `<img src="${item.img}" alt="">`;
+      thumbInner = `<img src="${item.img}" alt="" style="object-fit:contain;background:#060c14;">`;
     } else {
       thumbInner = `<div class="cgrid-thumb-gradient" style="background:${ZONE_GRADIENT[zone]}">` +
                    `<span class="cgrid-thumb-label">${item.type}</span></div>`;
