@@ -779,23 +779,7 @@
   }
 
   /* Hover note overlay */
-  .cgrid-overlay {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    padding: 16px;
-    overflow-y: auto;
-    scrollbar-width: none;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    line-height: 1.75;
-    color: rgba(232,244,255,0.88);
-    display: flex;
-    align-items: flex-start;
-  }
-  .cgrid-overlay::-webkit-scrollbar { display: none; }
-  .cgrid-item:hover .cgrid-overlay { opacity: 1; }
+  .cgrid-overlay { display: none; }
 
   .cgrid-info {
     padding: 14px 16px 16px;
@@ -824,19 +808,17 @@
   /* Back button */
   #panel-back {
     display: none;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(37,217,110,0.55);
+    font-size: 28px;
+    color: rgba(24,179,94,0.5);
     cursor: pointer;
-    transition: color 0.2s;
+    line-height: 1;
+    transition: color 0.2s, text-shadow 0.2s;
     user-select: none;
   }
-  #panel-back:hover { color: #25d96e; }
-  #panel-back.visible { display: flex; }
+  #panel-back:hover {
+    color: #25d96e;
+    text-shadow: 0 0 10px rgba(24,179,94,0.8);
+  }
 
   @media (max-width: 680px) {
     #card-grid { padding: 20px 16px 24px; gap: 14px; }
@@ -961,7 +943,7 @@
 
 <div id="content-panel">
   <div id="panel-header">
-    <span id="panel-back">&#8592; Back</span>
+    <span id="panel-back">&#8592;</span>
     <span id="panel-zone-name">BRAIN</span>
     <span id="panel-close">&#x2715;</span>
   </div>
