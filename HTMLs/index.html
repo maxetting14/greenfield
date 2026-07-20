@@ -961,10 +961,8 @@
 
 <div id="content-panel">
   <div id="panel-header">
-    <div style="display:flex;align-items:center;gap:16px;">
-      <span id="panel-back">&#8592; Back</span>
-      <span id="panel-zone-name">BRAIN</span>
-    </div>
+    <span id="panel-back">&#8592; Back</span>
+    <span id="panel-zone-name">BRAIN</span>
     <span id="panel-close">&#x2715;</span>
   </div>
   <div id="card-grid"></div>
@@ -1022,7 +1020,7 @@
     ],
     spirit: [
       {
-        type: 'Image',
+        type: 'Allegory',
         title: 'An Allegory From An Old College Coach',
         date: 'July 16, 2026',
         img: '../Content/juggling_plates.png',
@@ -1352,12 +1350,10 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
 
   function showGrid(zone) {
     const grid = document.getElementById('card-grid');
-    const backBtn = document.getElementById('panel-back');
     grid.innerHTML = '';
     CONTENT[zone].forEach((item, i) => {
       const card = buildGridCard(item, zone);
       card.addEventListener('click', () => openDetail(i));
-      // Touch: tap opens detail directly
       card.addEventListener('touchend', (e) => {
         e.preventDefault();
         openDetail(i);
@@ -1367,21 +1363,22 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     grid.classList.add('visible');
     viewport.style.display = 'none';
     document.getElementById('panel-nav').style.display = 'none';
-    backBtn.classList.remove('visible');
+    document.getElementById('panel-back').style.display = 'none';
+    document.getElementById('panel-zone-name').style.display = '';
+    document.getElementById('panel-close').style.display = '';
     panel.scrollTop = 0;
   }
 
   function openDetail(index) {
-    const grid = document.getElementById('card-grid');
-    const backBtn = document.getElementById('panel-back');
-    grid.classList.remove('visible');
+    document.getElementById('card-grid').classList.remove('visible');
     viewport.style.display = '';
-    document.getElementById('panel-nav').style.display = '';
-    backBtn.classList.add('visible');
+    document.getElementById('panel-nav').style.display = 'none';
+    document.getElementById('panel-back').style.display = 'flex';
+    document.getElementById('panel-zone-name').style.display = 'none';
+    document.getElementById('panel-close').style.display = 'none';
     cardIndex = index;
     viewport.innerHTML = '';
     viewport.appendChild(buildCard(CONTENT[currentZone][index]));
-    panelCount.textContent = `${index + 1} / ${CONTENT[currentZone].length}`;
     panel.scrollTop = 0;
   }
 
@@ -1399,9 +1396,11 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     document.body.classList.remove('panel-open');
     panelOpen = false;
     document.getElementById('card-grid').classList.remove('visible');
-    document.getElementById('panel-back').classList.remove('visible');
+    document.getElementById('panel-back').style.display = 'none';
+    document.getElementById('panel-zone-name').style.display = '';
+    document.getElementById('panel-close').style.display = '';
     viewport.style.display = '';
-    document.getElementById('panel-nav').style.display = '';
+    document.getElementById('panel-nav').style.display = 'none';
   }
 
   function flipCard(direction) {
