@@ -326,6 +326,13 @@
     color: #25d96e; text-transform: uppercase;
     text-shadow: 0 0 14px rgba(24,179,94,0.7);
   }
+  #panel-zone-sub {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba(232,244,255,0.35);
+    font-style: italic;
+  }
   #panel-close {
     font-size: 28px; color: rgba(24,179,94,0.5);
     cursor: pointer; line-height: 1;
@@ -948,7 +955,10 @@
 
 <div id="content-panel">
   <div id="panel-header">
-    <span id="panel-zone-name">BRAIN</span>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <span id="panel-zone-name">BRAIN</span>
+      <span id="panel-zone-sub"></span>
+    </div>
     <div id="panel-header-right">
       <span id="panel-back">&#8592;</span>
       <span id="panel-close">&#x2715;</span>
@@ -1375,9 +1385,18 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     panel.scrollTop = 0;
   }
 
+  const ZONE_SUB = {
+    brain:  'things that have sharpened the way I think and see the world',
+    heart:  'things that have moved me',
+    spirit: 'things that have grounded and inspired me',
+  };
+
   function openPanel(zone) {
     currentZone = zone;
     panelZone.textContent = zone.toUpperCase();
+    panelZone.style.color = ZONE_COLOR[zone];
+    panelZone.style.textShadow = `0 0 14px ${ZONE_COLOR[zone].replace('0.85', '0.5')}`;
+    document.getElementById('panel-zone-sub').textContent = ZONE_SUB[zone];
     panel.classList.add('open');
     document.body.classList.add('panel-open');
     panelOpen = true;
