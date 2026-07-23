@@ -330,8 +330,8 @@
     font-family: 'Courier New', monospace;
     font-size: 11px;
     letter-spacing: 0.12em;
-    color: rgba(232,244,255,0.35);
     font-style: italic;
+    opacity: 0.65;
   }
   #panel-close {
     font-size: 28px; color: rgba(24,179,94,0.5);
@@ -980,6 +980,13 @@
   const CONTENT = {
     brain: [
       {
+        type: 'Book',
+        title: '<em>Don\'t Believe Everything You Think</em> — Joseph Nguyen',
+        date: 'July 23, 2026',
+        thumb: '../Content/dont_believe_everything.avif',
+        note: `<img src="../Content/dont_believe_everything.avif" style="float:right;width:120px;margin:0 0 10px 14px;border-radius:3px;opacity:0.9;"><strong style="font-size:13px;letter-spacing:0.05em;">Heaven and Hell: A Zen Parable</strong><br><br>A samurai once interrupted a Zen master mid-meditation, demanding to know the true nature of heaven and hell. The master opened his eyes, looked him over, and said he wouldn't waste his time explaining anything to someone so coarse and unworthy — calling him beneath contempt and telling him to leave.<br><br>The samurai's face went red with rage. He drew his sword, ready to strike the master down on the spot.<br><br>&ldquo;That,&rdquo; the master said calmly, &ldquo;is hell.&rdquo;<br><br>The samurai stopped cold. He saw it instantly — his own mind had built that hell in seconds, out of nothing but anger and wounded pride. Shaken, he lowered his sword, pressed his palms together, and bowed.<br><br>&ldquo;And that,&rdquo; the master said, smiling, &ldquo;is heaven.&rdquo;<br><br>―<br><br>This is a fantastic book from Joseph Nguyen that was gifted to me by my uncle.<br><br>Above is a little parable at the beginning of Chapter 6 that I found to be especially profound. Our internal thoughts are capable of creating both heaven AND hell, and there is power in realizing that our thoughts have this two-sided nature to them. We control whether we want to think (and therefore live) in heaven or hell.<br><br>Later in the chapter, Nguyen writes the following: &ldquo;What can give us true peace is knowing that we always have this state of pure peace, love, and fulfillment lying underneath any suffering we are experiencing.&rdquo;<br><br>This serves as a great reminder that this state of peace and zen is something you are always capable of falling back on, regardless of situation.<br><br>A great read for anyone who wants to understand the true power of their thoughts and the action of thinking.`,
+      },
+      {
         type: 'Podcast',
         title: 'Away: Jen Rubio — <em>How I Built This with Guy Raz</em>',
         date: 'July 15, 2026',
@@ -1024,8 +1031,8 @@
         type: 'Allegory',
         title: 'An Allegory From An Old College Coach',
         date: 'July 16, 2026',
-        img: '../Content/juggling_plates.png',
-        note: `This is an image that an old college coach of mine shared with the entire team during a pivotal point in our season.<br><br>The message is that all everybody sees is the final result — they never see the prior failures, iterations, wrong decisions, and mistakes along the way.<br><br>This is an image that I keep coming back to. It lives rent free in my head, and it has helped shape me into who I am.<br><br>This image resonates with me because in April of 2026, I picked up all of my belongings, moved from Boston to NJ for a new job, and worked there for ~4 months before realizing I needed to step away. That was a moment in which I felt like the plates were shattering all around me. I had so much conviction in my decision and I felt like I genuinely had some direction in my career, but that quickly came to a screeching halt.<br><br>This is also the best thing that has happened to me. I am learning from this failure, picking up a new set of plates, and beginning to juggle again.`,
+        thumb: '../Content/juggling_plates.png',
+        note: `<img src="../Content/juggling_plates.png" class="note-lightbox-img" style="float:left;width:200px;margin:0 18px 10px 0;border-radius:6px;opacity:0.95;cursor:zoom-in;">This is an image that an old college coach of mine shared with the entire team during a pivotal point in our season.<br><br>The message is that all everybody sees is the final result — they never see the prior failures, iterations, wrong decisions, and mistakes along the way.<br><br>This is an image that I keep coming back to. It lives rent free in my head, and it has helped shape me into who I am.<br><br>This image resonates with me because in April of 2026, I picked up all of my belongings, moved from Boston to NJ for a new job, and worked there for ~4 months before realizing I needed to step away. That was a moment in which I felt like the plates were shattering all around me. I had so much conviction in my decision and I felt like I genuinely had some direction in my career, but that quickly came to a screeching halt.<br><br>This is also the best thing that has happened to me. I am learning from this failure, picking up a new set of plates, and beginning to juggle again.`,
       },
       {
         type: 'Music',
@@ -1159,6 +1166,7 @@
       </div>`;
     }
 
+    const zc = ZONE_COLOR[currentZone];
     div.innerHTML = `
       <div class="rolo-card-row">
         ${icon}
@@ -1177,6 +1185,14 @@
         </div>
       </div>`;
 
+    // Apply zone accent color to icon, type label, and date
+    const iconEl = div.querySelector('.rolo-card-icon');
+    const typeEl = div.querySelector('.rolo-card-type');
+    const dateEl = div.querySelector('.rolo-card-date');
+    if (iconEl) { iconEl.style.color = zc; iconEl.style.filter = `drop-shadow(0 0 4px ${zc.replace('0.85','0.5')})`; }
+    if (typeEl) { typeEl.style.color = zc; typeEl.style.textShadow = `0 0 8px ${zc.replace('0.85','0.3')}`; }
+    if (dateEl) { dateEl.style.color = zc; }
+
     if (item.img) {
       div.querySelector('.rolo-card-img-wrap').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1184,6 +1200,13 @@
         document.getElementById('img-lightbox').classList.add('open');
       });
     }
+    div.querySelectorAll('.note-lightbox-img').forEach(noteImg => {
+      noteImg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('lightbox-img').src = noteImg.src;
+        document.getElementById('img-lightbox').classList.add('open');
+      });
+    });
     if (item.youtube) {
       div.querySelector('.rolo-card-yt-thumb').addEventListener('click', () => {
         window.open(`https://www.youtube.com/watch?v=${item.youtube}&t=0`, '_blank');
@@ -1368,6 +1391,7 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     document.getElementById('panel-nav').style.display = 'none';
     document.getElementById('panel-back').style.display = 'none';
     document.getElementById('panel-zone-name').style.display = '';
+    document.getElementById('panel-zone-sub').style.display = '';
     document.getElementById('panel-close').style.display = '';
     panel.scrollTop = 0;
   }
@@ -1378,6 +1402,7 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     document.getElementById('panel-nav').style.display = 'none';
     document.getElementById('panel-back').style.display = 'flex';
     document.getElementById('panel-zone-name').style.display = 'none';
+    document.getElementById('panel-zone-sub').style.display = 'none';
     document.getElementById('panel-close').style.display = 'none';
     cardIndex = index;
     viewport.innerHTML = '';
@@ -1386,9 +1411,9 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
   }
 
   const ZONE_SUB = {
-    brain:  'things that have sharpened the way I think and see the world',
-    heart:  'things that have moved me',
-    spirit: 'things that have grounded and inspired me',
+    brain:  'things that have sharpened the way I think and see the world.',
+    heart:  'things that have moved me in ways I couldn\'t always explain but never forgot.',
+    spirit: 'things that have shaped who I am and what I keep coming back to.',
   };
 
   function openPanel(zone) {
@@ -1396,7 +1421,9 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     panelZone.textContent = zone.toUpperCase();
     panelZone.style.color = ZONE_COLOR[zone];
     panelZone.style.textShadow = `0 0 14px ${ZONE_COLOR[zone].replace('0.85', '0.5')}`;
-    document.getElementById('panel-zone-sub').textContent = ZONE_SUB[zone];
+    const sub = document.getElementById('panel-zone-sub');
+    sub.textContent = ZONE_SUB[zone];
+    sub.style.color = ZONE_COLOR[zone];
     panel.classList.add('open');
     document.body.classList.add('panel-open');
     panelOpen = true;
@@ -1410,6 +1437,7 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     document.getElementById('card-grid').classList.remove('visible');
     document.getElementById('panel-back').style.display = 'none';
     document.getElementById('panel-zone-name').style.display = '';
+    document.getElementById('panel-zone-sub').style.display = '';
     document.getElementById('panel-close').style.display = '';
     viewport.style.display = '';
     document.getElementById('panel-nav').style.display = 'none';
