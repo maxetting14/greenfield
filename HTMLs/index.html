@@ -980,18 +980,19 @@
   const CONTENT = {
     brain: [
       {
+        type: 'Video',
+        title: 'Eileen Gu\'s Mindset',
+        date: 'August 5, 2026',
+        thumb: '../Content/eileen_gu.png',
+        youtube: '7nB1O2vqfXQ',
+        note: `Enough said. Such an admirable mindset to have.<br><br>Eileen Gu is one of the most electrifying athletes in winter sports — a freestyle skier who, at just 18, swept three medals (two gold, one silver) at the 2022 Beijing Olympics. What makes her especially compelling is the sheer range: she's simultaneously a world-class athlete, a Stanford-bound student, and a top-tier fashion model who's fronted campaigns for Louis Vuitton and Tiffany & Co. Beyond the medals, she's known for a fearless, almost joyful approach to a sport where the margin for error is brutal. She's cool not just because she's dominant, but because she seems to refuse to be boxed into just one lane — athlete, scholar, model, cultural symbol — and pulls all of it off at once.`,
+      },
+      {
         type: 'Book',
         title: '<em>Don\'t Believe Everything You Think</em> — Joseph Nguyen',
         date: 'July 23, 2026',
         thumb: '../Content/dont_believe_everything.avif',
         note: `<img src="../Content/dont_believe_everything.avif" style="float:right;width:120px;margin:0 0 10px 14px;border-radius:3px;opacity:0.9;"><strong style="font-size:13px;letter-spacing:0.05em;">Heaven and Hell: A Zen Parable</strong><br><br>A samurai once interrupted a Zen master mid-meditation, demanding to know the true nature of heaven and hell. The master opened his eyes, looked him over, and said he wouldn't waste his time explaining anything to someone so coarse and unworthy — calling him beneath contempt and telling him to leave.<br><br>The samurai's face went red with rage. He drew his sword, ready to strike the master down on the spot.<br><br>&ldquo;That,&rdquo; the master said calmly, &ldquo;is hell.&rdquo;<br><br>The samurai stopped cold. He saw it instantly — his own mind had built that hell in seconds, out of nothing but anger and wounded pride. Shaken, he lowered his sword, pressed his palms together, and bowed.<br><br>&ldquo;And that,&rdquo; the master said, smiling, &ldquo;is heaven.&rdquo;<br><br>―<br><br>This is a fantastic book from Joseph Nguyen that was gifted to me by my uncle.<br><br>Above is a little parable at the beginning of Chapter 6 that I found to be especially profound. Our internal thoughts are capable of creating both heaven AND hell, and there is power in realizing that our thoughts have this two-sided nature to them. We control whether we want to think (and therefore live) in heaven or hell.<br><br>Later in the chapter, Nguyen writes the following: &ldquo;What can give us true peace is knowing that we always have this state of pure peace, love, and fulfillment lying underneath any suffering we are experiencing.&rdquo;<br><br>This serves as a great reminder that this state of peace and zen is something you are always capable of falling back on, regardless of situation.<br><br>A great read for anyone who wants to understand the true power of their thoughts and the action of thinking.`,
-      },
-      {
-        type: 'Video',
-        title: 'Eileen Gu\'s Mindset',
-        date: 'August 5, 2026',
-        youtube: '7nB1O2vqfXQ',
-        note: `Enough said. Such an admirable mindset to have.<br><br>Eileen Gu is one of the most electrifying athletes in winter sports — a freestyle skier who, at just 18, swept three medals (two gold, one silver) at the 2022 Beijing Olympics. What makes her especially compelling is the sheer range: she's simultaneously a world-class athlete, a Stanford-bound student, and a top-tier fashion model who's fronted campaigns for Louis Vuitton and Tiffany & Co. Beyond the medals, she's known for a fearless, almost joyful approach to a sport where the margin for error is brutal. She's cool not just because she's dominant, but because she seems to refuse to be boxed into just one lane — athlete, scholar, model, cultural symbol — and pulls all of it off at once.`,
       },
       {
         type: 'Podcast',
@@ -1357,10 +1358,10 @@ container.querySelectorAll('.pdf-btn').forEach(btn => {
     div.className = 'cgrid-item';
 
     let thumbInner = '';
-    if (item.youtube) {
+    if (item.thumb) {
+      thumbInner = `<img src="${item.thumb}" alt="" style="object-fit:cover;background:#060c14;">`;
+    } else if (item.youtube) {
       thumbInner = `<img src="https://img.youtube.com/vi/${item.youtube}/hqdefault.jpg" alt="">`;
-    } else if (item.thumb) {
-      thumbInner = `<img src="${item.thumb}" alt="" style="object-fit:contain;background:#060c14;">`;
     } else if (item.img) {
       thumbInner = `<img src="${item.img}" alt="" style="object-fit:contain;background:#060c14;">`;
     } else {
