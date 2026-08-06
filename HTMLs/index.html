@@ -1203,7 +1203,7 @@
           <div class="rolo-card-header">
             <div class="rolo-card-title">${item.title}</div>
           </div>
-          ${item.link ? `<iframe style="border-radius:12px;margin-bottom:16px;" src="${item.link.replace('open.spotify.com/episode','open.spotify.com/embed/episode')}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : ''}
+          ${item.link ? `<iframe style="border-radius:12px;margin-bottom:16px;" src="${item.link.replace('open.spotify.com/episode','open.spotify.com/embed/episode').replace('open.spotify.com/album','open.spotify.com/embed/album')}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : ''}
           ${(mediaHtml && !item.pdf) ? `<div style="margin-bottom:18px;">${mediaHtml}</div>` : ''}
           <div class="rolo-card-note">${item.note}</div>
           ${(mediaHtml && item.pdf) ? mediaHtml : ''}
