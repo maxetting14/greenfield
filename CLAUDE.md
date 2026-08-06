@@ -8,66 +8,78 @@ All work happens in `HTMLs/index.html`. No build step — everything (CSS, JS, S
 
 ## Preview server
 
-The preview MCP server is named `"xray"`, runs on port 8123, and serves from the project root directory. After any edit to `index.html`, sync it before verifying:
+The preview MCP server is named `"xray"`, runs on port 8123, serving `/tmp/xray_index.html`. After any edit to `index.html`, sync before verifying:
 
 ```bash
 cp "HTMLs/index.html" /tmp/xray_index.html
 ```
 
-Static assets (PDFs, images) are referenced relative to `HTMLs/index.html` in the actual file (e.g. `../Content/bagels_on_sunday.pdf`), but the preview server resolves them from the project root (e.g. `http://localhost:8123/Content/rooftop_boston.jpg`). Copy assets to `/tmp/Content/` if you need them to load in the preview.
+Navigate to `http://localhost:8123/xray_index.html` in the browser pane. The cover page must be dismissed before the main UI is interactive — use `document.getElementById('cover-enter').click()` via `javascript_tool`.
+
+Static assets are referenced relative to `HTMLs/index.html` (e.g. `../Content/bagels_on_sunday.pdf`), but the preview server resolves from `/tmp/` root. Copy assets to `/tmp/Content/` if needed for preview.
 
 ## Architecture
 
-### Visual layer
+### Peace sign navigation
 
-An SVG skeleton ("x-ray man") floats in the left ~18% of the screen. It is wrapped in `#organ-stage` and shifts rightward (`left: 18%`) when a zone is active. Three clickable organ SVGs — `#organ-brain`, `#organ-heart`, `#organ-meditation` (spirit) — are hidden by default and shown via `body.zone-<name>` CSS classes.
+`#peace-stage` (`position: fixed; inset: 0; z-index: 10`) centers `#peace-ring`, a square div containing the entire interactive UI. The ring holds:
 
-**Critical CSS specificity rule:** `#organ-stage svg { display: none; }` hides all SVGs inside the stage (specificity 1,0,1). Zone-specific show rules use `body.zone-brain #organ-brain` (1,1,1). The rotating text ring (`#organ-ring`) lives *outside* `#organ-stage` — moving it inside would break `position: fixed` because transformed parents create a new stacking context.
+- **`#peace-svg`** — SVG with 3 sector `<path>` elements (`#sector-brain`, `#sector-heart`, `#sector-spirit`) that are the hover/click targets. The circle is split into 3 equal 120° sectors. Lines go from center to the top and diagonally to lower-left/lower-right.
+- **`.peace-icon`** SVGs — brain, heart, meditation figure — absolutely positioned within the ring at their sector centroids.
+- **`#man-figure`** — the character SVG, positioned at `top:50%; left:50%` (the intersection of all peace sign lines). The `figureFloat` keyframe animation must include `translate(-50%, -50%)` in both keyframes or the centering breaks.
+- **`.zone-side-panel`** (`#zone-panel-left`, `#zone-panel-right`) — absolutely positioned text panels that appear left/right of the ring on hover. Positioned with `calc(50% + min(28vw, 36vh) + 28px)`.
 
-### Zone system
+### Pointer events architecture
 
-Three zones cycle in scroll order (bottom-to-top of the body): `spirit → heart → brain`.
+`#peace-stage` and `#peace-ring` have `pointer-events: none`. `#peace-svg` has `pointer-events: all`. `#peace-circle` and `.peace-line` have `pointer-events: none` (critical — without this they intercept mouse events intended for the sector paths beneath them). `.peace-icon` and `.peace-label` elements have `pointer-events: none`.
 
-```js
-const ZONES = ['spirit', 'heart', 'brain'];
-let zoneIndex = 2; // starts on brain
-```
+### Hover system
 
-Zone changes are driven by a `wheel` event listener on `window` — `e.preventDefault()` is only called when actively navigating (cover dismissed, panel closed). The `#content-panel` has `pointer-events: none` when closed to prevent it from intercepting wheel events despite being `position: fixed; inset: 0`.
+`setHover(zone)` sets `hover-<zone>` class on **both** `#peace-ring` (for CSS rules targeting child elements like icons) and `document.body` (for CSS rules targeting the side text panels). All hover classes must be removed from both when clearing. The `HOVER_CLASSES` constant holds the full list.
 
 ### Cover page
 
-`#cover` is a full-screen overlay (`position: fixed; inset: 0`). `coverVisible` (boolean in JS closure) tracks state. Click to dismiss; click the name tag (`#name-tag`) to return.
+`#cover` (`z-index: 500`) is full-screen. `coverVisible` (boolean in JS closure) gates all interaction — sectors' `mouseenter` and `click` handlers return early when `coverVisible` is true. `hideCover()` sets `coverVisible = false` and uses `classList.remove('cover-visible')` in the setTimeout — **do not** use `document.body.className = ''` as it wipes hover classes.
 
 ### Content panel
 
-`#content-panel` slides up from `translateY(100%)` to `translateY(0)` (class `open`). It contains a rolodex-style card system:
+`#content-panel` slides up from `translateY(100%)` to `translateY(0)` via class `open`. Clicking a sector calls `openPanel(zone)` directly (no intermediate definition panel). Cards are built by `buildCard(item)` from `CONTENT[zone]`.
 
-- Cards are built by `buildCard(item)` using the `CONTENT` object keyed by zone name.
-- `ZONE_ICONS` maps zone name → inline SVG for the card icon bullet.
-- Cards support: `type`, `title`, `date`, `note` (HTML allowed), `pdf` (click → open file), `link` (click text area → open URL), `img` (displays full-width at bottom of card; click → fullscreen lightbox).
-- When a card has both `link` and `img`, clicking the text opens the link; clicking the image opens the lightbox (`#img-lightbox`).
-- Cards get `max-height: 80vh; overflow-y: auto` for long content.
+Card fields: `{ type, title, date?, note (HTML ok), pdf?, link?, img? }`. PDF cards use pdf.js (loaded from cdnjs). Lightbox (`#img-lightbox`, `z-index: 9999`) must appear in DOM **before** the `<script>` tag.
 
-### Lightbox
+### About panel
 
-`#img-lightbox` is `position: fixed; inset: 0; z-index: 9999`. It must be in the DOM *before* the `<script>` tag — placing it after causes a null-reference crash that silently kills all event listeners.
+`#about-panel` (`z-index: 620`) slides in from `translateY(100%)`. Triggered by the corner "ABOUT" link, not from the peace sign sectors.
+
+### z-index stack
+
+| Element | z-index |
+|---|---|
+| `#peace-stage` | 10 |
+| `#about-panel` | 620 |
+| `#cover` | 500 |
+| `#content-panel` | 400 |
+| `#img-lightbox` | 9999 |
 
 ### Content data
 
 ```js
 const CONTENT = {
-  brain: [ /* items */ ],
-  heart: [ /* items */ ],
+  brain:  [ /* items */ ],
+  heart:  [ /* items */ ],
   spirit: [ /* items */ ],
 };
 ```
 
-Each item: `{ type, title, date?, note, pdf?, link?, img? }`.
+### Zone colors
+
+- Brain: pink `rgba(234, 89, 110, …)`
+- Heart: blue `rgba(100, 160, 230, …)`
+- Spirit: green `rgba(24, 179, 94, …)`
 
 ## Reference files (do not delete)
 
-- `HTMLs/xray.html` — prior iteration; useful reference for skeleton proportions and animation values.
-- `Content/bagels_on_sunday.pdf` — linked from the Heart entry.
-- `Content/rooftop_boston.jpg` — linked from the Spirit entry (converted from HEIC via `sips`).
-- `SVGs/` — source SVG assets; organ icons were extracted from these and inlined.
+- `HTMLs/xray.html` — prior iteration; useful for skeleton proportions and animation values.
+- `Content/bagels_on_sunday.pdf` — linked from a Heart card.
+- `Content/rooftop_boston.jpg` — linked from a Spirit card (converted from HEIC via `sips`).
+- `SVGs/Profile SVG.svg` — source for the about/profile icon.
